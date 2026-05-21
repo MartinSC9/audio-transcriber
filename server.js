@@ -92,11 +92,6 @@ app.post("/transcribe", upload.single("audio"), async (req, res) => {
   }
 });
 
-// Solo iniciar si no estamos en Vercel
-if (!process.env.VERCEL) {
-  app.listen(PORT, () => {
-    console.log(`Audio Transcriber corriendo en http://localhost:${PORT}`);
-  });
-}
-
-export default app;
+app.listen(PORT, () => {
+  console.log(`Audio Transcriber corriendo en http://localhost:${PORT}`);
+});
