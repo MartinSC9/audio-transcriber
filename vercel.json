@@ -1,5 +1,5 @@
 {
-  "buildCommand": false,
+  "buildCommand": "",
   "outputDirectory": "public",
   "rewrites": [
     { "source": "/transcribe", "destination": "/api/transcribe" }
