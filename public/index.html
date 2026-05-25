@@ -399,6 +399,22 @@
       color: var(--text);
     }
 
+    .history-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.2rem 0.4rem;
+      transition: transform 0.2s;
+    }
+
+    @media (max-width: 768px) {
+      .history-toggle { display: inline-block; }
+      .history-list.collapsed { display: none; }
+    }
+
     .history-clear {
       background: none;
       border: none;
@@ -680,10 +696,10 @@
           <!-- History -->
           <div class="history" id="history">
             <div class="history-header">
-              <h3>Transcripciones guardadas</h3>
+              <h3>Transcripciones guardadas <button class="history-toggle" id="historyToggle">&#9660;</button></h3>
               <button class="history-clear" id="historyClear">Borrar todo</button>
             </div>
-            <div class="history-list" id="historyList"></div>
+            <div class="history-list collapsed" id="historyList"></div>
           </div>
         </div>
 
@@ -939,6 +955,7 @@
 
         result.classList.add("visible");
         updateEmptyState();
+        result.scrollIntoView({ behavior: "smooth", block: "start" });
 
         // Save to history
         saveToHistory({
@@ -979,6 +996,13 @@
       copyBtn.textContent = "Copiado!";
       copyBtn.classList.add("copied");
       setTimeout(() => { copyBtn.textContent = "Copiar"; copyBtn.classList.remove("copied"); }, 2000);
+    });
+
+    document.getElementById("historyToggle").addEventListener("click", () => {
+      const list = document.getElementById("historyList");
+      const btn = document.getElementById("historyToggle");
+      list.classList.toggle("collapsed");
+      btn.innerHTML = list.classList.contains("collapsed") ? "&#9660;" : "&#9650;";
     });
 
     historyClear.addEventListener("click", () => {
