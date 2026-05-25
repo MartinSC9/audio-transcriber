@@ -242,6 +242,65 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* Loading animation */
+    .loading-state {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      margin-top: 2rem;
+      padding: 2rem;
+    }
+
+    .loading-state.visible { display: flex; }
+
+    .audio-waves {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 40px;
+    }
+
+    .audio-waves .bar {
+      width: 4px;
+      background: var(--accent);
+      border-radius: 2px;
+      animation: wave 1.2s ease-in-out infinite;
+    }
+
+    .audio-waves .bar:nth-child(1) { height: 12px; animation-delay: 0s; }
+    .audio-waves .bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+    .audio-waves .bar:nth-child(3) { height: 32px; animation-delay: 0.2s; }
+    .audio-waves .bar:nth-child(4) { height: 24px; animation-delay: 0.3s; }
+    .audio-waves .bar:nth-child(5) { height: 36px; animation-delay: 0.4s; }
+    .audio-waves .bar:nth-child(6) { height: 20px; animation-delay: 0.5s; }
+    .audio-waves .bar:nth-child(7) { height: 28px; animation-delay: 0.6s; }
+    .audio-waves .bar:nth-child(8) { height: 16px; animation-delay: 0.7s; }
+    .audio-waves .bar:nth-child(9) { height: 24px; animation-delay: 0.8s; }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+      50% { transform: scaleY(1); opacity: 1; }
+    }
+
+    .loading-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .loading-text .dot-anim::after {
+      content: '';
+      animation: dots 1.5s steps(4) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+    }
+
     /* History */
     .history {
       margin-top: 1.5rem;
@@ -479,6 +538,21 @@
 
       <div class="error" id="error"></div>
 
+      <div class="loading-state" id="loadingState">
+        <div class="audio-waves">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+        <p class="loading-text">Transcribiendo audio<span class="dot-anim"></span></p>
+      </div>
+
       <div class="result" id="result">
         <div class="result-header">
           <h2>Transcripcion</h2>
@@ -669,12 +743,15 @@
       fileInput.value = "";
     }
 
+    const loadingState = document.getElementById("loadingState");
+
     transcribeBtn.addEventListener("click", async () => {
       if (!selectedFile) return;
       if (isLimitReached()) { showLimitModal(); return; }
 
       transcribeBtn.disabled = true;
-      transcribeBtn.innerHTML = '<span class="spinner"></span>Transcribiendo...';
+      transcribeBtn.style.display = "none";
+      loadingState.classList.add("visible");
       errorDiv.classList.remove("visible");
       result.classList.remove("visible");
 
@@ -719,6 +796,8 @@
         errorDiv.textContent = err.message;
         errorDiv.classList.add("visible");
       } finally {
+        loadingState.classList.remove("visible");
+        transcribeBtn.style.display = "";
         transcribeBtn.disabled = false;
         transcribeBtn.textContent = "Transcribir";
       }
