@@ -9,6 +9,11 @@ export const config = {
   },
 };
 
+const ALLOWED_ORIGINS = [
+  "https://audio-transcriber-ebon.vercel.app",
+  "http://localhost:3500",
+];
+
 function parseMultipart(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -50,8 +55,22 @@ function parseMultipart(req) {
 }
 
 export default async function handler(req, res) {
+  // CORS / Origin check
+  const origin = req.headers["origin"] || req.headers["referer"] || "";
+  const isAllowed = ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
+
+  if (!isAllowed) {
+    return res.status(403).json({ error: "Acceso no autorizado" });
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  // Verificar header custom anti-abuse
+  const clientToken = req.headers["x-at-token"];
+  if (clientToken !== "cu-digital-audio-transcriber-2024") {
+    return res.status(403).json({ error: "Acceso no autorizado" });
   }
 
   let tmpPath = null;

@@ -20,6 +20,11 @@ try {
 const app = express();
 const PORT = 3500;
 
+const ALLOWED_ORIGINS = [
+  "https://audio-transcriber-ebon.vercel.app",
+  "http://localhost:3500",
+];
+
 // Crear carpeta uploads
 mkdirSync(join(__dirname, "uploads"), { recursive: true });
 
@@ -63,7 +68,22 @@ app.get("/", (req, res) => {
 app.use(express.static(join(__dirname, "public")));
 
 // Endpoint de transcripcion
-app.post("/transcribe", upload.single("audio"), async (req, res) => {
+app.post("/transcribe", (req, res, next) => {
+  // Origin check
+  const origin = req.headers["origin"] || req.headers["referer"] || "";
+  const isAllowed = ALLOWED_ORIGINS.some((o) => origin.startsWith(o));
+  if (!isAllowed) {
+    return res.status(403).json({ error: "Acceso no autorizado" });
+  }
+
+  // Header custom anti-abuse
+  const clientToken = req.headers["x-at-token"];
+  if (clientToken !== "cu-digital-audio-transcriber-2024") {
+    return res.status(403).json({ error: "Acceso no autorizado" });
+  }
+
+  next();
+}, upload.single("audio"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No se recibio ningun archivo de audio" });
   }

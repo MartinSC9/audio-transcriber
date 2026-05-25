@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Transcriber</title>
+  <title>Audio Transcriber | CU Digital</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,10 +23,16 @@
       padding: 2rem;
     }
 
-    h1 {
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .header h1 {
       font-size: 1.75rem;
       font-weight: 600;
-      margin-bottom: 0.5rem;
       color: #fff;
     }
 
@@ -176,11 +182,92 @@
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Limit reached overlay */
+    .limit-overlay {
+      display: none;
+      margin-top: 2rem;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .limit-overlay.visible { display: block; }
+
+    .limit-overlay h2 {
+      font-size: 1.2rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .limit-overlay p {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .limit-overlay .cta-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: #3b82f6;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .limit-overlay .cta-btn:hover { background: #2563eb; }
+
+    /* Footer branding */
+    .footer-brand {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .footer-brand span {
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .footer-brand a {
+      color: #3b82f6;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .footer-brand a:hover { text-decoration: underline; }
+
+    .cu-logo {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+    }
+
+    /* Disabled state */
+    .app-disabled .drop-zone,
+    .app-disabled .options,
+    .app-disabled .btn {
+      opacity: 0.3;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Audio Transcriber</h1>
+  <div class="container" id="appContainer">
+    <div class="header">
+      <h1>Audio Transcriber</h1>
+    </div>
     <p class="subtitle">Subi un archivo de audio y obtene la transcripcion en texto.</p>
 
     <div class="drop-zone" id="dropZone">
@@ -221,9 +308,45 @@
       <div class="meta" id="meta"></div>
       <div class="text-output" id="textOutput"></div>
     </div>
+
+    <div class="limit-overlay" id="limitOverlay">
+      <h2>Llegaste al limite de uso gratuito</h2>
+      <p>Para seguir utilizando Audio Transcriber, contactanos y te damos acceso completo.</p>
+      <a href="https://cu-digital.vercel.app" target="_blank" rel="noopener noreferrer" class="cta-btn">Contactar a CU Digital</a>
+    </div>
+
+    <div class="footer-brand">
+      <span>Desarrollado por</span>
+      <a href="https://cu-digital.vercel.app" target="_blank" rel="noopener noreferrer">CU Digital</a>
+    </div>
   </div>
 
   <script>
+    const MAX_FREE_USES = 1;
+    const STORAGE_KEY = "at_usage_count";
+
+    function getUsageCount() {
+      return parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
+    }
+
+    function incrementUsage() {
+      const count = getUsageCount() + 1;
+      localStorage.setItem(STORAGE_KEY, count.toString());
+      return count;
+    }
+
+    function checkLimit() {
+      if (getUsageCount() >= MAX_FREE_USES) {
+        document.getElementById("appContainer").classList.add("app-disabled");
+        document.getElementById("limitOverlay").classList.add("visible");
+        return true;
+      }
+      return false;
+    }
+
+    // Check on load
+    checkLimit();
+
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const fileName = document.getElementById("fileName");
@@ -267,6 +390,7 @@
 
     transcribeBtn.addEventListener("click", async () => {
       if (!selectedFile) return;
+      if (checkLimit()) return;
 
       transcribeBtn.disabled = true;
       transcribeBtn.innerHTML = '<span class="spinner"></span>Transcribiendo...';
@@ -278,7 +402,13 @@
       if (language.value) formData.append("language", language.value);
 
       try {
-        const res = await fetch("/transcribe", { method: "POST", body: formData });
+        const res = await fetch("/transcribe", {
+          method: "POST",
+          body: formData,
+          headers: {
+            "X-AT-Token": "cu-digital-audio-transcriber-2024",
+          },
+        });
         const data = await res.json();
 
         if (!res.ok) throw new Error(data.error || "Error desconocido");
@@ -291,6 +421,10 @@
         meta.textContent = parts.join(" | ");
 
         result.classList.add("visible");
+
+        // Incrementar uso despues de exito
+        incrementUsage();
+        // No bloquear inmediatamente para que vea el resultado
       } catch (err) {
         errorDiv.textContent = err.message;
         errorDiv.classList.add("visible");
