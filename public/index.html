@@ -385,6 +385,23 @@
       overflow: hidden;
     }
 
+    .history-item-footer {
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+
+    .history-item-expand {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.2rem 0;
+    }
+
+    .history-item-expand:hover { text-decoration: underline; }
+
     /* Modal */
     .modal-backdrop {
       display: none;
@@ -655,12 +672,16 @@
             <span class="history-item-date">${item.date}</span>
           </div>
           <div class="history-item-preview">${escapeHtml(item.text)}</div>
+          <div class="history-item-footer">
+            <button class="history-item-expand" data-index="${i}">Ver completo</button>
+          </div>
         </div>
       `).join("");
 
-      list.querySelectorAll(".history-item").forEach((el) => {
-        el.addEventListener("click", () => {
-          const idx = parseInt(el.dataset.index);
+      list.querySelectorAll(".history-item-expand").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.index);
           const item = history[idx];
           if (item) {
             textOutput.textContent = item.text;
