@@ -7,125 +7,159 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --bg: #0c0f14;
+      --surface: #151922;
+      --surface-2: #1c2230;
+      --border: #252d3b;
+      --border-hover: #3b4a63;
+      --text: #e8ecf4;
+      --text-muted: #8b95a8;
+      --text-dim: #5c6678;
+      --accent: #6c8cff;
+      --accent-hover: #5a7aff;
+      --accent-soft: rgba(108, 140, 255, 0.1);
+      --accent-soft-2: rgba(108, 140, 255, 0.06);
+      --success: #4ade80;
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.08);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0a0a0a;
-      color: #e5e5e5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
     }
 
     .container {
-      max-width: 640px;
+      max-width: 600px;
       width: 100%;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
       padding: 2rem;
     }
 
     .header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1.75rem;
     }
 
     .header h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: #fff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
     }
 
-    .subtitle {
-      color: #888;
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
+    .header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
 
     .drop-zone {
-      border: 2px dashed #333;
-      border-radius: 12px;
-      padding: 3rem 2rem;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 1.5rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
+      background: var(--accent-soft-2);
     }
 
     .drop-zone:hover, .drop-zone.dragover {
-      border-color: #666;
-      background: #111;
+      border-color: var(--accent);
+      background: var(--accent-soft);
     }
 
     .drop-zone.has-file {
-      border-color: #3b82f6;
-      background: #0c1929;
+      border-color: var(--accent);
+      background: var(--accent-soft);
     }
 
     .drop-zone svg {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 1rem;
-      color: #555;
+      width: 40px;
+      height: 40px;
+      margin-bottom: 0.75rem;
+      color: var(--text-dim);
     }
 
-    .drop-zone p { color: #888; font-size: 0.9rem; }
-    .drop-zone .file-name { color: #3b82f6; font-weight: 500; margin-top: 0.5rem; }
+    .drop-zone.has-file svg { color: var(--accent); }
+
+    .drop-zone p { color: var(--text-muted); font-size: 0.85rem; }
+    .drop-zone .formats { margin-top: 0.4rem; font-size: 0.75rem; color: var(--text-dim); }
+    .drop-zone .file-name { color: var(--accent); font-weight: 600; margin-top: 0.6rem; font-size: 0.9rem; }
 
     .file-input { display: none; }
 
     .options {
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
       align-items: center;
     }
 
-    .options label { color: #888; font-size: 0.85rem; }
+    .options label { color: var(--text-muted); font-size: 0.8rem; font-weight: 500; }
 
     .options select {
-      background: #1a1a1a;
-      color: #e5e5e5;
-      border: 1px solid #333;
-      border-radius: 6px;
-      padding: 0.4rem 0.6rem;
-      font-size: 0.85rem;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      outline: none;
+      transition: border-color 0.2s;
     }
+
+    .options select:focus { border-color: var(--accent); }
 
     .btn {
       width: 100%;
       padding: 0.85rem;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 500;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      background: #3b82f6;
+      background: var(--accent);
       color: #fff;
     }
 
-    .btn:hover { background: #2563eb; }
-    .btn:disabled { background: #1e3a5f; color: #5a8ac4; cursor: not-allowed; }
+    .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { background: var(--surface-2); color: var(--text-dim); cursor: not-allowed; transform: none; }
 
     .btn-secondary {
       width: 100%;
       padding: 0.75rem;
-      border: 1px solid #333;
-      border-radius: 8px;
-      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s;
       background: transparent;
-      color: #ccc;
+      color: var(--text-muted);
       margin-top: 0.75rem;
     }
 
-    .btn-secondary:hover { background: #1a1a1a; border-color: #555; }
+    .btn-secondary:hover { background: var(--surface-2); border-color: var(--border-hover); color: var(--text); }
 
     .result {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       display: none;
     }
 
@@ -135,56 +169,60 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
-    .result-header h2 { font-size: 1.1rem; font-weight: 500; }
+    .result-header h2 { font-size: 0.95rem; font-weight: 600; color: var(--text); }
 
     .result-actions {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .meta {
-      color: #888;
-      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-size: 0.75rem;
       display: flex;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
-    .copy-btn, .action-btn {
-      background: #222;
-      color: #ccc;
-      border: 1px solid #333;
+    .pill-btn {
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 0.35rem 0.75rem;
-      font-size: 0.8rem;
+      padding: 0.3rem 0.65rem;
+      font-size: 0.75rem;
       cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s;
     }
 
-    .copy-btn:hover, .action-btn:hover { background: #333; }
+    .pill-btn:hover { background: var(--border); color: var(--text); }
+    .pill-btn.copied { background: rgba(74, 222, 128, 0.1); color: var(--success); border-color: rgba(74, 222, 128, 0.3); }
 
     .text-output {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
       padding: 1.25rem;
       line-height: 1.7;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       white-space: pre-wrap;
-      max-height: 400px;
+      max-height: 300px;
       overflow-y: auto;
+      color: var(--text);
     }
 
     .error {
-      background: #1c0b0b;
-      border: 1px solid #5c1a1a;
-      color: #f87171;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
+      background: var(--danger-soft);
+      border: 1px solid rgba(248, 113, 113, 0.2);
+      color: var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
       display: none;
     }
 
@@ -192,21 +230,21 @@
 
     .spinner {
       display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid #5a8ac4;
-      border-top-color: transparent;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.7s linear infinite;
       vertical-align: middle;
       margin-right: 0.5rem;
     }
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* History section */
+    /* History */
     .history {
-      margin-top: 2.5rem;
+      margin-top: 1.5rem;
       display: none;
     }
 
@@ -216,69 +254,71 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .history-header h3 {
-      font-size: 1rem;
-      font-weight: 500;
-      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
     }
 
     .history-clear {
       background: none;
       border: none;
-      color: #666;
-      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-size: 0.7rem;
       cursor: pointer;
-      padding: 0.25rem 0.5rem;
+      padding: 0.3rem 0.6rem;
       border-radius: 4px;
+      transition: all 0.15s;
     }
 
-    .history-clear:hover { color: #f87171; background: #1c0b0b; }
+    .history-clear:hover { color: var(--danger); background: var(--danger-soft); }
 
     .history-list {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.5rem;
     }
 
     .history-item {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 8px;
-      padding: 1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
       cursor: pointer;
-      transition: border-color 0.2s;
+      transition: all 0.15s;
     }
 
-    .history-item:hover { border-color: #333; }
+    .history-item:hover { border-color: var(--border-hover); background: var(--border); }
 
     .history-item-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
     }
 
     .history-item-name {
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #ddd;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      max-width: 70%;
+      max-width: 65%;
     }
 
     .history-item-date {
-      font-size: 0.7rem;
-      color: #555;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      white-space: nowrap;
     }
 
     .history-item-preview {
-      font-size: 0.8rem;
-      color: #888;
+      font-size: 0.78rem;
+      color: var(--text-muted);
       line-height: 1.4;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -294,38 +334,36 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
       z-index: 1000;
       align-items: center;
       justify-content: center;
       padding: 1rem;
     }
 
-    .modal-backdrop.visible {
-      display: flex;
-    }
+    .modal-backdrop.visible { display: flex; }
 
     .modal {
-      background: #141414;
-      border: 1px solid #2a2a2a;
-      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
       padding: 2.5rem 2rem;
-      max-width: 420px;
+      max-width: 400px;
       width: 100%;
       text-align: center;
-      animation: modalIn 0.25s ease-out;
+      animation: modalIn 0.2s ease-out;
     }
 
     @keyframes modalIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from { transform: scale(0.95) translateY(10px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
     .modal-icon {
       width: 56px;
       height: 56px;
-      background: #1e293b;
+      background: var(--accent-soft);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -334,128 +372,133 @@
     }
 
     .modal-icon svg {
-      width: 28px;
-      height: 28px;
-      color: #3b82f6;
+      width: 26px;
+      height: 26px;
+      color: var(--accent);
     }
 
     .modal h2 {
-      font-size: 1.25rem;
-      color: #fff;
-      margin-bottom: 0.6rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      font-weight: 700;
     }
 
     .modal p {
-      color: #999;
-      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
       margin-bottom: 1.75rem;
-      line-height: 1.5;
+      line-height: 1.6;
     }
 
     .modal .cta-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      padding: 0.8rem 1.75rem;
-      background: #3b82f6;
+      padding: 0.8rem 1.5rem;
+      background: var(--accent);
       color: #fff;
       text-decoration: none;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: background 0.2s;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s;
     }
 
-    .modal .cta-btn:hover { background: #2563eb; }
+    .modal .cta-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
 
     .modal .cta-btn svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
     }
 
-    /* Footer branding */
+    /* Footer */
     .footer-brand {
-      margin-top: 2.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #1a1a1a;
+      margin-top: 1.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     .footer-brand span {
-      color: #666;
-      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-size: 0.75rem;
     }
 
     .footer-brand a {
-      color: #3b82f6;
+      color: var(--accent);
       text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
 
     .footer-brand a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.5rem; }
+      .drop-zone { padding: 2rem 1rem; }
+    }
   </style>
 </head>
 <body>
-  <div class="container" id="appContainer">
-    <div class="header">
-      <h1>Audio Transcriber</h1>
-    </div>
-    <p class="subtitle">Subi un archivo de audio y obtene la transcripcion en texto.</p>
+  <div class="container">
+    <div class="card" id="appContainer">
+      <div class="header">
+        <h1>Audio Transcriber</h1>
+        <p>Subi un archivo de audio y obtene la transcripcion en texto.</p>
+      </div>
 
-    <div class="drop-zone" id="dropZone">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
-      </svg>
-      <p>Arrastra tu audio aca o <strong>hace click</strong> para seleccionar</p>
-      <p style="margin-top: 0.5rem; font-size: 0.8rem;">MP3, WAV, M4A, OGG, FLAC, WebM (max 25MB)</p>
-      <p class="file-name" id="fileName"></p>
-    </div>
+      <div class="drop-zone" id="dropZone">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+        </svg>
+        <p>Arrastra tu audio o <strong>hace click</strong> para seleccionar</p>
+        <p class="formats">MP3, WAV, M4A, OGG, FLAC, WebM (max 25MB)</p>
+        <p class="file-name" id="fileName"></p>
+      </div>
 
-    <input type="file" class="file-input" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.webm,.ogg,.flac,.oga,audio/*">
+      <input type="file" class="file-input" id="fileInput" accept=".mp3,.wav,.m4a,.mp4,.webm,.ogg,.flac,.oga,audio/*">
 
-    <div class="options">
-      <label>Idioma:</label>
-      <select id="language">
-        <option value="">Auto-detectar</option>
-        <option value="es">Espanol</option>
-        <option value="en">Ingles</option>
-        <option value="pt">Portugues</option>
-        <option value="fr">Frances</option>
-        <option value="de">Aleman</option>
-        <option value="it">Italiano</option>
-        <option value="ja">Japones</option>
-        <option value="zh">Chino</option>
-      </select>
-    </div>
+      <div class="options">
+        <label>Idioma:</label>
+        <select id="language">
+          <option value="">Auto-detectar</option>
+          <option value="es">Espanol</option>
+          <option value="en">Ingles</option>
+          <option value="pt">Portugues</option>
+          <option value="fr">Frances</option>
+          <option value="de">Aleman</option>
+          <option value="it">Italiano</option>
+          <option value="ja">Japones</option>
+          <option value="zh">Chino</option>
+        </select>
+      </div>
 
-    <button class="btn" id="transcribeBtn" disabled>Transcribir</button>
+      <button class="btn" id="transcribeBtn" disabled>Transcribir</button>
 
-    <div class="error" id="error"></div>
+      <div class="error" id="error"></div>
 
-    <div class="result" id="result">
-      <div class="result-header">
-        <h2>Transcripcion</h2>
-        <div class="result-actions">
-          <button class="copy-btn" id="copyBtn">Copiar</button>
+      <div class="result" id="result">
+        <div class="result-header">
+          <h2>Transcripcion</h2>
+          <div class="result-actions">
+            <button class="pill-btn" id="copyBtn">Copiar</button>
+          </div>
         </div>
+        <div class="meta" id="meta"></div>
+        <div class="text-output" id="textOutput"></div>
+        <button class="btn-secondary" id="newTranscriptionBtn">Transcribir otro audio</button>
       </div>
-      <div class="meta" id="meta"></div>
-      <div class="text-output" id="textOutput"></div>
-      <button class="btn-secondary" id="newTranscriptionBtn">Transcribir otro audio</button>
-    </div>
 
-    <!-- History -->
-    <div class="history" id="history">
-      <div class="history-header">
-        <h3>Transcripciones guardadas</h3>
-        <button class="history-clear" id="historyClear">Borrar todo</button>
+      <!-- History -->
+      <div class="history" id="history">
+        <div class="history-header">
+          <h3>Transcripciones guardadas</h3>
+          <button class="history-clear" id="historyClear">Borrar todo</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
       </div>
-      <div class="history-list" id="historyList"></div>
     </div>
 
     <div class="footer-brand">
@@ -552,6 +595,7 @@
             if (item.duration) parts.push(`Duracion: ${Math.round(item.duration)}s`);
             meta.textContent = parts.join(" | ");
             result.classList.add("visible");
+            result.scrollIntoView({ behavior: "smooth", block: "nearest" });
           }
         });
       });
@@ -688,7 +732,8 @@
     copyBtn.addEventListener("click", () => {
       navigator.clipboard.writeText(textOutput.textContent);
       copyBtn.textContent = "Copiado!";
-      setTimeout(() => (copyBtn.textContent = "Copiar"), 2000);
+      copyBtn.classList.add("copied");
+      setTimeout(() => { copyBtn.textContent = "Copiar"; copyBtn.classList.remove("copied"); }, 2000);
     });
 
     historyClear.addEventListener("click", () => {
