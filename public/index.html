@@ -108,6 +108,22 @@
     .btn:hover { background: #2563eb; }
     .btn:disabled { background: #1e3a5f; color: #5a8ac4; cursor: not-allowed; }
 
+    .btn-secondary {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #333;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: #ccc;
+      margin-top: 0.75rem;
+    }
+
+    .btn-secondary:hover { background: #1a1a1a; border-color: #555; }
+
     .result {
       margin-top: 2rem;
       display: none;
@@ -124,6 +140,11 @@
 
     .result-header h2 { font-size: 1.1rem; font-weight: 500; }
 
+    .result-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
     .meta {
       color: #888;
       font-size: 0.8rem;
@@ -132,7 +153,7 @@
       margin-bottom: 0.75rem;
     }
 
-    .copy-btn {
+    .copy-btn, .action-btn {
       background: #222;
       color: #ccc;
       border: 1px solid #333;
@@ -142,7 +163,7 @@
       cursor: pointer;
     }
 
-    .copy-btn:hover { background: #333; }
+    .copy-btn:hover, .action-btn:hover { background: #333; }
 
     .text-output {
       background: #111;
@@ -183,35 +204,160 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Limit reached overlay */
-    .limit-overlay {
+    /* History section */
+    .history {
+      margin-top: 2.5rem;
       display: none;
-      margin-top: 2rem;
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
     }
 
-    .limit-overlay.visible { display: block; }
+    .history.visible { display: block; }
 
-    .limit-overlay h2 {
-      font-size: 1.2rem;
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .history-header h3 {
+      font-size: 1rem;
+      font-weight: 500;
       color: #fff;
-      margin-bottom: 0.75rem;
     }
 
-    .limit-overlay p {
-      color: #aaa;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+    .history-clear {
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 0.75rem;
+      cursor: pointer;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    .history-clear:hover { color: #f87171; background: #1c0b0b; }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .history-item {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .history-item:hover { border-color: #333; }
+
+    .history-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .history-item-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #ddd;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 70%;
+    }
+
+    .history-item-date {
+      font-size: 0.7rem;
+      color: #555;
+    }
+
+    .history-item-preview {
+      font-size: 0.8rem;
+      color: #888;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.visible {
+      display: flex;
+    }
+
+    .modal {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: modalIn 0.25s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      background: #1e293b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .modal-icon svg {
+      width: 28px;
+      height: 28px;
+      color: #3b82f6;
+    }
+
+    .modal h2 {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+    }
+
+    .modal p {
+      color: #999;
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
       line-height: 1.5;
     }
 
-    .limit-overlay .cta-btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
+    .modal .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.8rem 1.75rem;
       background: #3b82f6;
       color: #fff;
       text-decoration: none;
@@ -221,7 +367,12 @@
       transition: background 0.2s;
     }
 
-    .limit-overlay .cta-btn:hover { background: #2563eb; }
+    .modal .cta-btn:hover { background: #2563eb; }
+
+    .modal .cta-btn svg {
+      width: 18px;
+      height: 18px;
+    }
 
     /* Footer branding */
     .footer-brand {
@@ -247,20 +398,6 @@
     }
 
     .footer-brand a:hover { text-decoration: underline; }
-
-    .cu-logo {
-      width: 24px;
-      height: 24px;
-      border-radius: 4px;
-    }
-
-    /* Disabled state */
-    .app-disabled .drop-zone,
-    .app-disabled .options,
-    .app-disabled .btn {
-      opacity: 0.3;
-      pointer-events: none;
-    }
   </style>
 </head>
 <body>
@@ -303,28 +440,55 @@
     <div class="result" id="result">
       <div class="result-header">
         <h2>Transcripcion</h2>
-        <button class="copy-btn" id="copyBtn">Copiar texto</button>
+        <div class="result-actions">
+          <button class="copy-btn" id="copyBtn">Copiar</button>
+        </div>
       </div>
       <div class="meta" id="meta"></div>
       <div class="text-output" id="textOutput"></div>
+      <button class="btn-secondary" id="newTranscriptionBtn">Transcribir otro audio</button>
     </div>
 
-    <div class="limit-overlay" id="limitOverlay">
-      <h2>Llegaste al limite de uso gratuito</h2>
-      <p>Para seguir utilizando Audio Transcriber, contactanos y te damos acceso completo.</p>
-      <a href="https://cu-digital.vercel.app" target="_blank" rel="noopener noreferrer" class="cta-btn">Contactar a CU Digital</a>
+    <!-- History -->
+    <div class="history" id="history">
+      <div class="history-header">
+        <h3>Transcripciones guardadas</h3>
+        <button class="history-clear" id="historyClear">Borrar todo</button>
+      </div>
+      <div class="history-list" id="historyList"></div>
     </div>
 
     <div class="footer-brand">
       <span>Desarrollado por</span>
-      <a href="https://cu-digital.vercel.app" target="_blank" rel="noopener noreferrer">CU Digital</a>
+      <a href="https://cu-digital-nu.vercel.app/" target="_blank" rel="noopener noreferrer">CU Digital</a>
+    </div>
+  </div>
+
+  <!-- Limit Modal -->
+  <div class="modal-backdrop" id="limitModal">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+        </svg>
+      </div>
+      <h2>Limite de uso alcanzado</h2>
+      <p>Tu prueba gratuita finalizo. Contactanos para obtener acceso completo a Audio Transcriber.</p>
+      <a href="https://cu-digital-nu.vercel.app/" target="_blank" rel="noopener noreferrer" class="cta-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+        </svg>
+        Contactar a CU Digital
+      </a>
     </div>
   </div>
 
   <script>
     const MAX_FREE_USES = 1;
     const STORAGE_KEY = "at_usage_count";
+    const HISTORY_KEY = "at_history";
 
+    // --- Usage limit ---
     function getUsageCount() {
       return parseInt(localStorage.getItem(STORAGE_KEY) || "0", 10);
     }
@@ -335,18 +499,69 @@
       return count;
     }
 
-    function checkLimit() {
-      if (getUsageCount() >= MAX_FREE_USES) {
-        document.getElementById("appContainer").classList.add("app-disabled");
-        document.getElementById("limitOverlay").classList.add("visible");
-        return true;
-      }
-      return false;
+    function showLimitModal() {
+      document.getElementById("limitModal").classList.add("visible");
     }
 
-    // Check on load
-    checkLimit();
+    function isLimitReached() {
+      return getUsageCount() >= MAX_FREE_USES;
+    }
 
+    // --- History ---
+    function getHistory() {
+      try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]"); }
+      catch { return []; }
+    }
+
+    function saveToHistory(entry) {
+      const history = getHistory();
+      history.unshift(entry);
+      if (history.length > 20) history.pop();
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function renderHistory() {
+      const history = getHistory();
+      const container = document.getElementById("history");
+      const list = document.getElementById("historyList");
+
+      if (!history.length) {
+        container.classList.remove("visible");
+        return;
+      }
+
+      container.classList.add("visible");
+      list.innerHTML = history.map((item, i) => `
+        <div class="history-item" data-index="${i}">
+          <div class="history-item-header">
+            <span class="history-item-name">${escapeHtml(item.fileName)}</span>
+            <span class="history-item-date">${item.date}</span>
+          </div>
+          <div class="history-item-preview">${escapeHtml(item.text)}</div>
+        </div>
+      `).join("");
+
+      list.querySelectorAll(".history-item").forEach((el) => {
+        el.addEventListener("click", () => {
+          const idx = parseInt(el.dataset.index);
+          const item = history[idx];
+          if (item) {
+            textOutput.textContent = item.text;
+            const parts = [];
+            if (item.language) parts.push(`Idioma: ${item.language}`);
+            if (item.duration) parts.push(`Duracion: ${Math.round(item.duration)}s`);
+            meta.textContent = parts.join(" | ");
+            result.classList.add("visible");
+          }
+        });
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    // --- DOM ---
     const dropZone = document.getElementById("dropZone");
     const fileInput = document.getElementById("fileInput");
     const fileName = document.getElementById("fileName");
@@ -357,10 +572,21 @@
     const errorDiv = document.getElementById("error");
     const copyBtn = document.getElementById("copyBtn");
     const language = document.getElementById("language");
+    const newTranscriptionBtn = document.getElementById("newTranscriptionBtn");
+    const historyClear = document.getElementById("historyClear");
 
     let selectedFile = null;
 
-    dropZone.addEventListener("click", () => fileInput.click());
+    // Check limit on load
+    if (isLimitReached()) showLimitModal();
+
+    // Render history on load
+    renderHistory();
+
+    dropZone.addEventListener("click", () => {
+      if (isLimitReached()) { showLimitModal(); return; }
+      fileInput.click();
+    });
 
     dropZone.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -372,6 +598,7 @@
     dropZone.addEventListener("drop", (e) => {
       e.preventDefault();
       dropZone.classList.remove("dragover");
+      if (isLimitReached()) { showLimitModal(); return; }
       if (e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]);
     });
 
@@ -388,9 +615,19 @@
       errorDiv.classList.remove("visible");
     }
 
+    function resetForm() {
+      selectedFile = null;
+      fileName.textContent = "";
+      dropZone.classList.remove("has-file");
+      transcribeBtn.disabled = true;
+      result.classList.remove("visible");
+      errorDiv.classList.remove("visible");
+      fileInput.value = "";
+    }
+
     transcribeBtn.addEventListener("click", async () => {
       if (!selectedFile) return;
-      if (checkLimit()) return;
+      if (isLimitReached()) { showLimitModal(); return; }
 
       transcribeBtn.disabled = true;
       transcribeBtn.innerHTML = '<span class="spinner"></span>Transcribiendo...';
@@ -422,9 +659,18 @@
 
         result.classList.add("visible");
 
-        // Incrementar uso despues de exito
+        // Save to history
+        saveToHistory({
+          fileName: selectedFile.name,
+          text: data.text,
+          language: data.language || "",
+          duration: data.duration || 0,
+          date: new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" }),
+        });
+        renderHistory();
+
+        // Increment usage after success
         incrementUsage();
-        // No bloquear inmediatamente para que vea el resultado
       } catch (err) {
         errorDiv.textContent = err.message;
         errorDiv.classList.add("visible");
@@ -434,10 +680,25 @@
       }
     });
 
+    newTranscriptionBtn.addEventListener("click", () => {
+      if (isLimitReached()) { showLimitModal(); return; }
+      resetForm();
+    });
+
     copyBtn.addEventListener("click", () => {
       navigator.clipboard.writeText(textOutput.textContent);
       copyBtn.textContent = "Copiado!";
-      setTimeout(() => (copyBtn.textContent = "Copiar texto"), 2000);
+      setTimeout(() => (copyBtn.textContent = "Copiar"), 2000);
+    });
+
+    historyClear.addEventListener("click", () => {
+      localStorage.removeItem(HISTORY_KEY);
+      renderHistory();
+    });
+
+    // Close modal on backdrop click
+    document.getElementById("limitModal").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) e.target.classList.remove("visible");
     });
   </script>
 </body>
